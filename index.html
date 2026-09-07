@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#071a33">
+  <meta name="description" content="İstanbul Sende - İstanbul için günlük yaşam, ulaşım, trafik, belediye hizmetleri ve gezilecek yerler.">
+  <title>İstanbul Sende</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+
+<body>
+  <div class="app-bg"></div>
+
+  <div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="topbar">
+      <button class="icon-btn" id="homeBtn" aria-label="Ana sayfa">⌂</button>
+
+      <div class="brand">
+        <div class="brand-mark">İ</div>
+        <div>
+          <strong>İstanbul Sende</strong>
+          <span>Şehir cebinde</span>
+        </div>
+      </div>
+
+      <button class="icon-btn" id="backBtn" aria-label="Geri">‹</button>
+    </header>
+
+    <main>
+
+      <!-- HOME -->
+      <section id="homeScreen" class="screen active">
+
+        <section class="hero">
+          <div class="hero-content">
+            <div class="eyebrow">İSTANBUL • TEK UYGULAMA</div>
+            <h1>Şehir<br><span>senin elinde.</span></h1>
+            <p>İstanbul'da ihtiyacın olan bilgilere hızlıca ulaş, şehri keşfet ve günlük hayatını kolaylaştır.</p>
+
+            <div class="hero-actions">
+              <button class="primary-btn" data-screen="placesScreen">
+                <span>📍</span> İstanbul'u Keşfet
+              </button>
+              <button class="glass-btn" data-screen="mapScreen">
+                🗺️ Haritayı Aç
+              </button>
+            </div>
+          </div>
+
+          <div class="istanbul-art" aria-hidden="true">
+            <div class="sun"></div>
+            <div class="moon-glow"></div>
+            <div class="bridge">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="mosque mosque-a"><i></i><b></b></div>
+            <div class="mosque mosque-b"><i></i><b></b></div>
+            <div class="mosque mosque-c"><i></i><b></b></div>
+            <div class="water"></div>
+          </div>
+        </section>
+
+        <!-- SEARCH -->
+        <section class="home-search">
+          <div class="search-icon">⌕</div>
+          <input id="globalSearch" type="search" placeholder="İstanbul'da ne arıyorsun?" autocomplete="off">
+          <button id="clearSearch" class="search-clear" aria-label="Temizle">×</button>
+        </section>
+
+        <div id="globalSearchResults" class="global-results"></div>
+
+        <!-- QUICK INFO -->
+        <section class="section-head">
+          <div>
+            <span class="section-kicker">HIZLI ERİŞİM</span>
+            <h2>İstanbul yanınızda</h2>
+          </div>
+          <span class="live-dot">● CANLI</span>
+        </section>
+
+        <!-- CATEGORY CARDS -->
+        <section class="category-grid">
+
+          <button class="category-card category-life" data-screen="lifeScreen">
+            <div class="category-icon">⛅</div>
+            <div class="category-text">
+              <small>GÜNLÜK</small>
+              <strong>Günlük Yaşam</strong>
+              <span>Hava, eczane ve etkinlikler</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-transport" data-screen="transportScreen">
+            <div class="category-icon">🚌</div>
+            <div class="category-text">
+              <small>HAREKET</small>
+              <strong>Ulaşım</strong>
+              <span>Otobüs, metro ve vapur</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-traffic" data-screen="trafficScreen">
+            <div class="category-icon">🚦</div>
+            <div class="category-text">
+              <small>ANLIK</small>
+              <strong>Trafik</strong>
+              <span>Canlı trafik ve duyurular</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-city" data-screen="cityScreen">
+            <div class="category-icon">🏛️</div>
+            <div class="category-text">
+              <small>RESMİ</small>
+              <strong>Belediye Hizmetleri</strong>
+              <span>e-Devlet, İSPARK ve sorgular</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-discover" data-screen="placesScreen">
+            <div class="category-icon">📍</div>
+            <div class="category-text">
+              <small>KEŞFET</small>
+              <strong>Gezilecek Yerler</strong>
+              <span>Avrupa ve Anadolu yakası</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-map" data-screen="mapScreen">
+            <div class="category-icon">🗺️</div>
+            <div class="category-text">
+              <small>İNTERAKTİF</small>
+              <strong>İnteraktif Harita</strong>
+              <span>Tüm noktaları haritada gör</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-emergency" data-screen="emergencyScreen">
+            <div class="category-icon">🚨</div>
+            <div class="category-text">
+              <small>ACİL</small>
+              <strong>Acil İletişim</strong>
+              <span>Tek dokunuşla yardım</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+          <button class="category-card category-about" data-screen="aboutScreen">
+            <div class="category-icon">ℹ️</div>
+            <div class="category-text">
+              <small>UYGULAMA</small>
+              <strong>Hakkımda</strong>
+              <span>İstanbul Sende hakkında</span>
+            </div>
+            <b class="arrow">→</b>
+          </button>
+
+        </section>
+
+        <section class="mini-banner">
+          <div class="mini-banner-icon">🌉</div>
+          <div>
+            <strong>İki kıta, tek şehir.</strong>
+            <span>İstanbul'u keşfetmeye hazır mısın?</span>
+          </div>
+          <button data-screen="placesScreen">Keşfet →</button>
+        </section>
+      </section>
+
+
+      <!-- DAILY LIFE -->
+      <section id="lifeScreen" class="screen">
+        <div class="page-heading">
+          <span class="page-kicker">GÜNLÜK YAŞAM</span>
+          <h1>Hayatını kolaylaştır.</h1>
+          <p>İstanbul'da her gün ihtiyaç duyabileceğin hizmetlere hızlı eriş.</p>
+        </div>
+
+        <div class="service-list">
+          <a class="service-item service-green" href="https://www.google.com/maps/search/eczane+İstanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">💊</span>
+            <span><small>HARİTA</small><strong>Nöbetçi Eczane</strong><em>Yakındaki eczaneleri bul</em></span>
+            <b>↗</b>
+          </a>
+
+          <button class="service-item service-blue" data-screen="mapScreen">
+            <span class="service-icon">🗺️</span>
+            <span><small>İNTERAKTİF</small><strong>Eczane Harita</strong><em>Haritada eczaneleri ara</em></span>
+            <b>→</b>
+          </button>
+
+          <a class="service-item service-sky" href="https://www.mgm.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">⛅</span>
+            <span><small>MGM</small><strong>Detaylı Hava Durumu</strong><em>Resmî meteoroloji bilgileri</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-purple" href="https://kultursanat.istanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">🎭</span>
+            <span><small>KÜLTÜR</small><strong>Kültür Sanat Etkinlikleri</strong><em>İstanbul'daki etkinlikleri keşfet</em></span>
+            <b>↗</b>
+          </a>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- TRANSPORT -->
+      <section id="transportScreen" class="screen">
+        <div class="page-heading">
+          <span class="page-kicker">ULAŞIM</span>
+          <h1>Şehirde hareket et.</h1>
+          <p>İstanbul'un toplu ulaşım seçeneklerine tek noktadan ulaş.</p>
+        </div>
+
+        <div class="service-list">
+          <a class="service-item service-red" href="https://iett.istanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">🚏</span>
+            <span><small>İETT</small><strong>İETT Otobüs</strong><em>Hatlar ve ulaşım bilgileri</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-indigo" href="https://www.metro.istanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">🚇</span>
+            <span><small>METRO İSTANBUL</small><strong>Metro Hatları</strong><em>Hat ve sefer bilgileri</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-cyan" href="https://sehirhatlari.istanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">⛴️</span>
+            <span><small>ŞEHİR HATLARI</small><strong>Vapur</strong><em>İskeleler ve seferler</em></span>
+            <b>↗</b>
+          </a>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- TRAFFIC -->
+      <section id="trafficScreen" class="screen">
+        <div class="page-heading">
+          <span class="page-kicker">TRAFİK</span>
+          <h1>Yola çıkmadan bak.</h1>
+          <p>İstanbul trafiğiyle ilgili hızlı erişim noktaları.</p>
+        </div>
+
+        <div class="service-list">
+          <a class="service-item service-orange" href="https://uym.ibb.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">📡</span>
+            <span><small>CANLI</small><strong>Canlı MOBESE</strong><em>İBB ulaşım ve trafik sistemi</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-yellow" href="https://uym.ibb.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">🗺️</span>
+            <span><small>HARİTA</small><strong>Trafik Haritası</strong><em>Trafik durumunu incele</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-red" href="https://uym.ibb.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">📊</span>
+            <span><small>İBB UYM</small><strong>Trafik Sistemi</strong><em>Ulaşım yönetim merkezi</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-blue" href="https://www.ibb.istanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">🏛️</span>
+            <span><small>İBB</small><strong>İBB Duyuru</strong><em>Güncel belediye duyuruları</em></span>
+            <b>↗</b>
+          </a>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- CITY SERVICES -->
+      <section id="cityScreen" class="screen">
+        <div class="page-heading">
+          <span class="page-kicker">BELEDİYE HİZMETLERİ</span>
+          <h1>Resmî hizmetlere ulaş.</h1>
+          <p>Günlük işlemler için ilgili hizmet noktalarına hızlıca geç.</p>
+        </div>
+
+        <div class="service-list">
+          <a class="service-item service-turquoise" href="https://www.turkiye.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">🔐</span>
+            <span><small>RESMÎ PORTAL</small><strong>e-Devlet Giriş</strong><em>e-Devlet Kapısı'na git</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-gold" href="https://www.turkiye.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">💰</span>
+            <span><small>SORGULAMA</small><strong>Vergi & Ceza Sorgulama</strong><em>e-Devlet üzerinden işlem yap</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-purple" href="https://www.turkiye.gov.tr/" target="_blank" rel="noopener">
+            <span class="service-icon">🚗</span>
+            <span><small>SORGULAMA</small><strong>HGS / OGS Bakiye</strong><em>Resmî sorgulama hizmetlerine git</em></span>
+            <b>↗</b>
+          </a>
+
+          <a class="service-item service-green" href="https://ispark.istanbul/" target="_blank" rel="noopener">
+            <span class="service-icon">🅿️</span>
+            <span><small>İSPARK</small><strong>İSPARK Otopark Sorgula</strong><em>Otopark hizmetlerine ulaş</em></span>
+            <b>↗</b>
+          </a>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- PLACES -->
+      <section id="placesScreen" class="screen">
+        <div class="page-heading page-heading-row">
+          <div>
+            <span class="page-kicker">İSTANBUL'U KEŞFET</span>
+            <h1>Şehrin en güzel<br>köşeleri.</h1>
+            <p>Avrupa ve Anadolu yakasından seçilmiş İstanbul durakları.</p>
+          </div>
+          <div class="count-badge"><strong id="placeCount">0</strong><span>yer</span></div>
+        </div>
+
+        <div class="filter-row">
+          <button class="filter-btn active" data-filter="all">Tümü</button>
+          <button class="filter-btn" data-filter="europe">Avrupa</button>
+          <button class="filter-btn" data-filter="asia">Anadolu</button>
+          <button class="filter-btn" data-filter="favorites">♡ Favoriler</button>
+        </div>
+
+        <div id="placesGrid" class="places-grid"></div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- MAP -->
+      <section id="mapScreen" class="screen map-screen">
+        <div class="page-heading page-heading-row">
+          <div>
+            <span class="page-kicker">İNTERAKTİF HARİTA</span>
+            <h1>İstanbul'u haritada gör.</h1>
+            <p>Gezilecek yerleri seç, konumuna bak ve yol tarifi al.</p>
+          </div>
+          <button id="locateBtn" class="round-action" title="Konumumu bul">⌖</button>
+        </div>
+
+        <div class="map-toolbar">
+          <div class="map-search">
+            <span>⌕</span>
+            <input id="mapSearch" type="search" placeholder="Yer ara...">
+          </div>
+          <button id="showAllBtn" class="map-tool-btn">Tümü</button>
+        </div>
+
+        <div id="map"></div>
+
+        <div class="map-note">
+          <span>📍</span>
+          <span>Haritadaki bir noktaya dokunarak yer detayını açabilirsin.</span>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- EMERGENCY -->
+      <section id="emergencyScreen" class="screen">
+        <div class="emergency-head">
+          <div class="emergency-symbol">🚨</div>
+          <span class="page-kicker">ACİL İLETİŞİM</span>
+          <h1>Acil durumda<br>tek dokunuş.</h1>
+          <p>Arama yapmak için ilgili kartın üzerine dokun.</p>
+        </div>
+
+        <div class="emergency-grid">
+          <a href="tel:112" class="emergency-card ambulance">
+            <span>🚑</span>
+            <div><small>ACİL ÇAĞRI</small><strong>Ambulans</strong><b>112</b></div>
+            <i>☎</i>
+          </a>
+
+          <a href="tel:155" class="emergency-card police">
+            <span>👮</span>
+            <div><small>POLİS</small><strong>Polis</strong><b>155</b></div>
+            <i>☎</i>
+          </a>
+
+          <a href="tel:110" class="emergency-card fire">
+            <span>🔥</span>
+            <div><small>İTFAİYE</small><strong>İtfaiye</strong><b>110</b></div>
+            <i>☎</i>
+          </a>
+
+          <a href="tel:156" class="emergency-card gendarmerie">
+            <span>🚓</span>
+            <div><small>JANDARMA</small><strong>Jandarma</strong><b>156</b></div>
+            <i>☎</i>
+          </a>
+        </div>
+
+        <div class="emergency-warning">
+          <strong>⚠️ Önemli</strong>
+          <span>Acil olmayan durumlarda ilgili kurumların normal iletişim kanallarını kullanın.</span>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+
+      <!-- ABOUT -->
+      <section id="aboutScreen" class="screen">
+        <div class="about-hero">
+          <div class="about-logo">İ</div>
+          <span class="page-kicker">İSTANBUL SENDE</span>
+          <h1>Şehir cebinde.</h1>
+          <p>İstanbul'u daha kolay yaşamak ve keşfetmek için tasarlandı.</p>
+        </div>
+
+        <div class="about-card">
+          <p>
+            İstanbul Sende, kullanıcıların günlük ihtiyaç duyduğu bilgilere hızlı erişmesini sağlayan bir platformdur.
+          </p>
+          <p>
+            Resmi kurumların sunduğu hizmetlere tek noktadan ulaşım kolaylığı sağlar.
+          </p>
+
+          <h2>Avantajları</h2>
+
+          <div class="advantages">
+            <div>✓ <span>Tek sayfadan hızlı erişim</span></div>
+            <div>✓ <span>Zaman kazandırır</span></div>
+            <div>✓ <span>Mobil uyumlu ve pratik kullanım</span></div>
+            <div>✓ <span>Farklı hizmetleri tek yerde toplar</span></div>
+            <div>✓ <span>Ücretsiz ve kolay erişilebilir</span></div>
+          </div>
+
+          <div class="notice">
+            <strong>Bilgilendirme</strong>
+            <p>
+              Bu uygulama resmi bir kurum değildir. Resmi kurumlara ait hizmetlere yönlendirme yapar ve içerikler ilgili kurumların kaynaklarından alınmaktadır.
+            </p>
+          </div>
+
+          <div class="developer">
+            <span>Geliştirici</span>
+            <strong>ykocaman59</strong>
+          </div>
+        </div>
+
+        <button class="back-card" data-back>← Ana menüye dön</button>
+      </section>
+
+    </main>
+
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav" aria-label="Alt menü">
+      <button class="nav-item active" data-nav-screen="homeScreen">
+        <span>⌂</span><small>Ana Sayfa</small>
+      </button>
+      <button class="nav-item" data-nav-screen="mapScreen">
+        <span>⌖</span><small>Harita</small>
+      </button>
+      <button class="nav-item" data-nav-screen="placesScreen">
+        <span>✦</span><small>Keşfet</small>
+      </button>
+      <button class="nav-item" data-nav-screen="aboutScreen">
+        <span>☰</span><small>Hakkımda</small>
+      </button>
+    </nav>
+
+    <footer class="app-footer">
+      <span>İstanbul Sende</span>
+      <span>•</span>
+      <span>v2.0</span>
+    </footer>
+  </div>
+
+
+  <!-- PLACE MODAL -->
+  <div id="placeModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="place-modal-card">
+      <button class="modal-close" data-close-modal>×</button>
+      <div id="modalVisual" class="modal-visual"></div>
+      <div class="modal-body">
+        <div id="modalSide" class="modal-side">İSTANBUL</div>
+        <h2 id="modalTitle">Yer</h2>
+        <p id="modalDescription"></p>
+        <div class="modal-actions">
+          <button id="modalFavorite" class="modal-btn secondary">♡ Favori</button>
+          <a id="modalDirections" class="modal-btn primary" href="#" target="_blank" rel="noopener">↗ Yol Tarifi</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
+
